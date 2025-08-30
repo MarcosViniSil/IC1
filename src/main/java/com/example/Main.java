@@ -23,7 +23,6 @@ public class Main {
                 Double elementConverted = Double.parseDouble(element);
                 rowConverted.add(elementConverted);
             }
-
             allDataDouble.add(rowConverted);
         }
 

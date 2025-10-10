@@ -42,7 +42,7 @@ public class Perceptron {
             for(int i = 0 ; i < this.in + 1; i++){
                 u += x[i] * weights[i][j];
             }
-
+            
             out[j] = 1 / (1 + (Math.exp(u*(-1))));
         }
 

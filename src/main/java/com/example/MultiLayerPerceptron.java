@@ -25,8 +25,8 @@ public class MultiLayerPerceptron{
     
     public void insertRandomValuesIntoWH(){
         Random random = new Random();
-        double min = -0.3;
-        double max = 0.3;
+        double min = -0.1;
+        double max = 0.1;
         for(int i = 0 ; i < in + 1; i++){
             for(int j = 0; j < hiddenQuantity; j++){
                 double randomValue = min + (max - min) * random.nextDouble();
@@ -37,8 +37,8 @@ public class MultiLayerPerceptron{
     
     public void insertRandomValuesIntoWO(){
         Random random = new Random();
-        double min = -0.3;
-        double max = 0.3;
+        double min = -0.1;
+        double max = 0.1;
         for(int i = 0 ; i < hiddenQuantity+1; i++){
             for(int j = 0; j < out; j++){
                 double randomValue = min + (max - min) * random.nextDouble();
@@ -81,7 +81,8 @@ public class MultiLayerPerceptron{
         
         double[] deltaO = new double[this.out];
         for(int j = 0; j < this.out; j++){
-            deltaO[j] = out[j]*(1-out[j])*(y[j]-out[j]);
+            int signal = (y[j]-out[j]) >= 0 ? 1: -1;
+            deltaO[j] = (out[j]*(1-out[j])*Math.pow(y[j]-out[j],2))*signal;
         }
         
         double[] deltaH = new double[this.hiddenQuantity];

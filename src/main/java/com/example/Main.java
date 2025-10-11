@@ -9,23 +9,26 @@ import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
 
 public class Main {
-    final static int SEASONS = 10000;
+    final static int SEASONS = 1000000;
 
     public static void main(String[] args) throws IOException, CsvException {
         // CONVENTION = 0 -> NO, 1 -> YES
-        CSVReader reader = new CSVReader(new FileReader("inflamations-train.csv"));
+        CSVReader reader = new CSVReader(new FileReader("abalone_train_normalized.csv"));
+        //CSVReader reader = new CSVReader(new FileReader("inflamations_train_normalized.csv"));
         List<String[]> allData = reader.readAll();
 
         List<List<Double>> train = convertCsvToDouble(allData);
         
-        CSVReader readerTest = new CSVReader(new FileReader("inflamations-test.csv"));
+        CSVReader readerTest = new CSVReader(new FileReader("abalone_test_normalized.csv"));
+        //CSVReader readerTest = new CSVReader(new FileReader("inflamations_test_normalized.csv"));
         List<String[]> allDataTest = readerTest.readAll();
        
         List<List<Double>> test = convertCsvToDouble(allDataTest);
         
         reader.close();
         readerTest.close();
-        executePerceptron(7, 1, 0.03, train,test,5);
+        //executePerceptron(7, 2, 0.3, train,test,7);
+        executePerceptron(10, 1, 0.1, train,test,10);
     }
 
     public static void executePerceptron(int in, int outP, double mi, List<List<Double>> base,List<List<Double>> test,int hiddenQuantity) {
@@ -74,8 +77,18 @@ public class Main {
 
                 double[] adjustedValues = new double[out.length];
 
-                for (int j = 0; j < out.length; j++) {
-                    adjustedValues[j] = out[j] > 0.5 ? 1 : 0;
+                if (out.length == 1) {
+                    adjustedValues[0] = out[0] > 0.5 ? 1 : 0;
+                } else {
+                    int maxIndex = 0;
+                    for (int j = 1; j < out.length; j++) {
+                        if (out[j] > out[maxIndex]) {
+                            maxIndex = j;
+                        }
+                    }
+                    for (int j = 0; j < out.length; j++) {
+                        adjustedValues[j] = (j == maxIndex) ? 1 : 0;
+                    }
                 }
 
                 int sumClassification = 0;
@@ -102,29 +115,14 @@ public class Main {
     
     public static List<List<Double>> convertCsvToDouble(List<String[]> allData){
         List<List<Double>> allDataDouble = new ArrayList<>();
-    
-        int numCols = allData.get(0).length;
-        double[] min = new double[numCols];
-        double[] max = new double[numCols];
-        Arrays.fill(min, Double.MAX_VALUE);
-        Arrays.fill(max, Double.MIN_VALUE);
-    
-        for (String[] row : allData) {
-            for (int i = 0; i < numCols; i++) {
-                double val = Double.parseDouble(row[i]);
-                if (val < min[i]) min[i] = val;
-                if (val > max[i]) max[i] = val;
-            }
-        }
-        
+
         for (String[] row : allData) {
             List<Double> rowConverted = new ArrayList<>();
-            for (int i = 0; i < numCols; i++) {
-                double val = Double.parseDouble(row[i]);
-                double norm = (max[i] - min[i] == 0) ? 0 : (val - min[i]) / (max[i] - min[i]);
-    
-                rowConverted.add(norm);
+            for (String element : row) {
+                Double elementConverted = Double.parseDouble(element);
+                rowConverted.add(elementConverted);
             }
+
             allDataDouble.add(rowConverted);
         }
     

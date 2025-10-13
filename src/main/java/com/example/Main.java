@@ -13,14 +13,14 @@ public class Main {
 
     public static void main(String[] args) throws IOException, CsvException {
         // CONVENTION = 0 -> NO, 1 -> YES
-        CSVReader reader = new CSVReader(new FileReader("abalone_train_normalized.csv"));
         //CSVReader reader = new CSVReader(new FileReader("inflamations_train_normalized.csv"));
+        CSVReader reader = new CSVReader(new FileReader("abalone_train-converted.csv"));
         List<String[]> allData = reader.readAll();
 
         List<List<Double>> train = convertCsvToDouble(allData);
         
-        CSVReader readerTest = new CSVReader(new FileReader("abalone_test_normalized.csv"));
         //CSVReader readerTest = new CSVReader(new FileReader("inflamations_test_normalized.csv"));
+        CSVReader readerTest = new CSVReader(new FileReader("abalone_test-converted.csv"));
         List<String[]> allDataTest = readerTest.readAll();
        
         List<List<Double>> test = convertCsvToDouble(allDataTest);
@@ -28,7 +28,7 @@ public class Main {
         reader.close();
         readerTest.close();
         //executePerceptron(7, 2, 0.3, train,test,7);
-        executePerceptron(10, 1, 0.1, train,test,10);
+        executePerceptron(10, 30, 0.001, train,test,10);
     }
 
     public static void executePerceptron(int in, int outP, double mi, List<List<Double>> base,List<List<Double>> test,int hiddenQuantity) {
@@ -107,8 +107,10 @@ public class Main {
                 classificationErrorTest += sumClassification > 0 ? 1 : 0;
 
             }
-
-            System.out.printf("%-10d %-14.6f %-10.1f %-14.6f %-10.1f%n", e, errorTrain, classificationErrorTrain,errorTest,classificationErrorTest);
+            if(e % 100 == 0){
+                System.out.printf("%-10d %-14.6f %-10.1f %-14.6f %-10.1f%n", e, errorTrain, classificationErrorTrain,errorTest,classificationErrorTest);
+                
+            }
         }
     }
 

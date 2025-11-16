@@ -1,7 +1,7 @@
 import csv
 from sklearn.model_selection import train_test_split
 
-with open("abalone-converted-3.csv", "r") as f:
+with open("abalone.csv", "r") as f:
     data = list(csv.reader(f, delimiter=","))
 
 train_size = 0.75

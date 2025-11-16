@@ -1,5 +1,5 @@
-input_path = 'abalone-converted-2.csv'
-output_path = 'abalone-converted-3.csv'
+input_path = 'abalone.csv'
+output_path = 'abalone-converted.csv'
 
 OUT_QNT = 1
 
